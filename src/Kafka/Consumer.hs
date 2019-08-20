@@ -114,7 +114,7 @@ newConsumer :: MonadIO m
             -> Subscription
             -> m (Either KafkaError KafkaConsumer)
 newConsumer props (Subscription ts tp) = liftIO $ do
-  let cp = setCallback (rebalanceCallback (\_ _ -> return ())) <> props
+  let cp = props
   kc@(KafkaConf kc' qref ct) <- newConsumerConf cp
   tp' <- topicConf (TopicProps tp)
   _   <- setDefaultTopicConf kc tp'
@@ -351,4 +351,3 @@ runConsumerLoop k ct timeout =
       case token of
         Running   -> pollConsumerEvents k timeout >> go
         Cancelled -> return ()
-
